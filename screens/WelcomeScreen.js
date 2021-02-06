@@ -1,313 +1,340 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, Dimensions, TouchableOpacity, Modal } from 'react-native';
-import AppHeader from '../components/AppBar';
+import React,{Component}from 'react';
+import {
+    View,
+    Text,
+    TextInput,
+    Modal,
+    KeyboardAvoidingView,
+    StyleSheet,
+    TouchableOpacity,
+    ScrollView} from 'react-native';
+
+import SantaAnimation from '../components/SantaClause.js';
 import db from '../config';
 import firebase from 'firebase';
-import SantaAnimation from '../components/SantaClause';
 
-export default class WelcomeScreen extends React.Component {
 
-   constructor() {
-      super();
-      this.state = {
-         dimensions: Dimensions.get('window'),
-         emailId: '',
-         password: '',
-         modalVisible: false,
-         userDetails: {
-            mobileNo: 0,
-            firstName: '',
-            lastName: '',
-            address: ''
-         }
-      }
+
+export default class WelcomeScreen extends Component{
+  constructor(){
+    super();
+    this.state={
+      emailId:'',
+      password:'',
+      firstName:'',
+      lastName:'',
+      address:'',
+      contact:'',
+      confirmPassword:'',
+      isModalVisible:'false'
+    }
+  }
+
+  userSignUp = (emailId, password,confirmPassword) =>{
+   if(password !== confirmPassword){
+       return alert("password doesn't match\nCheck your password.")
+   }else{
+     firebase.auth().createUserWithEmailAndPassword(emailId, password)
+     .then(()=>{
+       db.collection('users').add({
+         first_name:this.state.firstName,
+         last_name:this.state.lastName,
+         contact:this.state.contact,
+         email_id:this.state.emailId,
+         address:this.state.address
+       })
+       return  alert(
+            'User Added Successfully',
+            '',
+            [
+              {text: 'OK', onPress: () => this.setState({"isModalVisible" : false})},
+            ]
+        );
+     })
+     .catch((error)=> {
+       // Handle Errors here.
+       var errorCode = error.code;
+       var errorMessage = error.message;
+       return alert(errorMessage)
+     });
    }
+ }
 
-   componentDidMount() {
-      Dimensions.addEventListener("change", ({ window, screen }) => {
-         this.setState({
-            dimensions: window
-         })
-      })
-   }
+userLogin = (emailId, password)=>{
+   firebase.auth().signInWithEmailAndPassword(emailId, password)
+   .then(()=>{
+     return alert("Successfully Login")
+   })
+   .catch((error)=> {
+     var errorCode = error.code;
+     var errorMessage = error.message;
+     return alert(errorMessage)
+   })
+ }
 
-   componentWillUnmount() {
-      Dimensions.removeEventListener("change", () => console.log(`event listener removed in App.js`))
-   }
-
-   signUp = (emailId, password) => {
-      if(emailId && password) {
-         // firebase.auth().createUserWithEmailAndPassword(emailId, password)
-         // .then(res => {
-            alert(`User added successfully`);
-            showModal();
-         // })
-         // .catch(err => {
-         //    alert(`Some error occurred`)
-         //    console.error(err)
-         // });
-      }
-   }
-
-   showModal = () => {
-      this.setState({
-         modalVisible: true
-      })
-   }
-   
-   login = (emailId, password) => {
-      if(emailId && password) {
-         firebase.auth().signInWithEmailAndPassword(emailId, password)
-         .then(res => alert(`Login successful!`))
-         .catch(err => {
-            alert(`Some error occureed`)
-            console.error(err)
-         })
-      }
-   }
-
-   onModalClosed = (userDetails) => {
-
-   }
-
-   saveUserDetails = async () => {
-      print(`In user details`)
-      let userDetails = this.state.userDetails;
-      await db.collection('users').add({
-         address: userDetails.address,
-         mobileNo: userDetails.mobileNo,
-         firstName: userDetails.firstName,
-         lastName: userDetails.lastName
-      }).then(res => alert(`Details successfully saved!`))
-   }
-
-   render() {
-      console.log(`Dimensions: ${dimensions}`)
-      let dimensions = this.state.dimensions;
-
-      let textInputInfoList = [
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  emailId: text
-               })
-            },
-            placeholder: 'Email'
-         },
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  password: text
-               })
-            },
-            placeholder: 'Password'
-         }
-      ]
-
-      let buttonInfoList = [
-         {
-            title: 'Sign up',
-            onPress: () => this.signUp(this.state.emailId, this.state.password)
-         },
-         {
-            title: 'Login',
-            onPress: () => this.login(this.state.emailId, this.state.password)
-         }
-      ]
-
-      let userDetailsTextInputInfoList = [
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  userDetails: {
-                     ...this.state.userDetails,
-                     firstName: text
-                  }
-               })
-            },
-            placeholder: 'First Name'
-         },
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  userDetails: {
-                     ...this.state.userDetails,
-                     lastName: text
-                  }
-               })
-            },
-            placeholder: 'Last Name'
-         },
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  userDetails: {
-                     ...this.state.userDetails,
-                     address: text
-                  }
-               })
-            },
-            placeholder: 'Address'
-         },
-         {
-            onChangeText: (text) => {
-               this.setState({
-                  userDetails: {
-                     ...this.state.userDetails,
-                     mobileNo: text
-                  }
-               })
-            },
-            placeholder: 'Mobile No.'
-         }
-      ]
-
-      let modalButtonInfoList = [
-         {
-            title: 'Submit',
-            onPress: () => this.saveUserDetails()
-         },
-         {
-            title: 'Cancel',
-            onPress: () => this.setState({
-               modalVisible: false
+showModal = ()=>{
+  return(
+  <Modal
+    animationType="fade"
+    transparent={true}
+    visible={this.state.isModalVisible}
+    >
+    <View style={styles.modalContainer}>
+      <ScrollView style={{width:'100%'}}>
+        <KeyboardAvoidingView style={styles.KeyboardAvoidingView}>
+        <Text
+          style={styles.modalTitle}
+          >Registration</Text>
+        <TextInput
+          style={styles.formTextInput}
+          placeholder ={"First Name"}
+          maxLength ={8}
+          onChangeText={(text)=>{
+            this.setState({
+              firstName: text
             })
-         }
-      ]
+          }}
+        />
+        <TextInput
+          style={styles.formTextInput}
+          placeholder ={"Last Name"}
+          maxLength ={8}
+          onChangeText={(text)=>{
+            this.setState({
+              lastName: text
+            })
+          }}
+        />
+        <TextInput
+          style={styles.formTextInput}
+          placeholder ={"Contact"}
+          maxLength ={10}
+          keyboardType={'numeric'}
+          onChangeText={(text)=>{
+            this.setState({
+              contact: text
+            })
+          }}
+        />
+        <TextInput
+          style={styles.formTextInput}
+          placeholder ={"Address"}
+          multiline = {true}
+          onChangeText={(text)=>{
+            this.setState({
+              address: text
+            })
+          }}
+        />
+        <TextInput
+          style={styles.formTextInput}
+          placeholder ={"Email"}
+          keyboardType ={'email-address'}
+          onChangeText={(text)=>{
+            this.setState({
+              emailId: text
+            })
+          }}
+        /><TextInput
+          style={styles.formTextInput}
+          placeholder ={"Password"}
+          secureTextEntry = {true}
+          onChangeText={(text)=>{
+            this.setState({
+              password: text
+            })
+          }}
+        /><TextInput
+          style={styles.formTextInput}
+          placeholder ={"Confrim Password"}
+          secureTextEntry = {true}
+          onChangeText={(text)=>{
+            this.setState({
+              confirmPassword: text
+            })
+          }}
+        />
+        <View style={styles.modalBackButton}>
+          <TouchableOpacity
+            style={styles.registerButton}
+            onPress={()=>
+              this.userSignUp(this.state.emailId, this.state.password, this.state.confirmPassword)
+            }
+          >
+          <Text style={styles.registerButtonText}>Register</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.modalBackButton}>
+          <TouchableOpacity
+            style={styles.cancelButton}
+            onPress={()=>this.setState({"isModalVisible":false})}
+          >
+          <Text style={{color:'#ff5722'}}>Cancel</Text>
+          </TouchableOpacity>
+        </View>
+        </KeyboardAvoidingView>
+      </ScrollView>
+    </View>
+  </Modal>
+)
+}
+  render(){
+    return(
+      <View style={styles.container}>
+        <View style={{justifyContent: 'center',alignItems: 'center'}}>
 
-      return (
-         <View>
-            <AppHeader title='Book Santa' />
-            <Modal 
-               visible={this.state.modalVisible}
-               transparent={true}
-               animationType="slide"
-               onRequestClose={() => this.onModalClosed(this.state.userDetails)}
-               style={styles(dimensions).modalBackground}
-            >
-               <View>
-                  <View style={{alignItems: 'center'}}>
-                     <Text style={styles(dimensions).modalText}>Enter details</Text>
-                  </View>
-                  {
-                     userDetailsTextInputInfoList.map(detail => {
-                        return (
-                           <View style={styles(dimensions).modalTextInputContainer}>
-                              <TextInput 
-                                 onChangeText={detail.onChangeText}
-                                 placeholder={detail.placeholder}
-                                 style={styles(dimensions).modalTextInput}
-                              />
-                           </View>
-                        )
-                     })
-                  }
-                  {
-                      modalButtonInfoList.map(button => 
-                        <View style = {styles(dimensions).modalButtonContainer}>
-                           <TouchableOpacity
-                              style={styles(dimensions).button}
-                              onPress={button.onPress}
-                           >
-                               <Text style={{fontSize: 20, color: 'white', fontWeight: '600'}}>{button.title}</Text>
-                           </TouchableOpacity>
-                        </View>
-                     )
-                  }
-               </View>
-            </Modal>
-            <View>
-               <View style={styles(dimensions).backgroundContainer}>
-                  {
-                     textInputInfoList.map(textInput =>
-                        <View style={styles(dimensions).textInputContainer}>
-                           <TextInput
-                              style={styles(dimensions).textInput}
-                              onChangeText={textInput.onChangeText}
-                              placeholder={textInput.placeholder}
-                           />
-                        </View>
-                     )
-                  }
-               </View>
-               <View>
-                  {
-                     buttonInfoList.map(button => 
-                        <View style = {styles(dimensions).buttonContainer}>
-                           <TouchableOpacity
-                              style={styles(dimensions).button}
-                              onPress={button.onPress}
-                           >
-                               <Text style={{fontSize: 20, color: 'white', fontWeight: '600'}}>{button.title}</Text>
-                           </TouchableOpacity>
-                        </View>
-                     )
-                  }
-               </View>
-            </View>
-         </View>
-      );
-   }
+        </View>
+          {
+            this.showModal()
+          }
+        <View style={{justifyContent:'center', alignItems:'center'}}>
+          {/* <SantaAnimation/> */}
+          <Text style={styles.title}>Book Santa</Text>
+        </View>
+        <View>
+            <TextInput
+            style={styles.loginBox}
+            placeholder="abc@example.com"
+            keyboardType ='email-address'
+            onChangeText={(text)=>{
+              this.setState({
+                emailId: text
+              })
+            }}
+          />
+          <TextInput
+          style={styles.loginBox}
+          secureTextEntry = {true}
+          placeholder="enter Password"
+          onChangeText={(text)=>{
+            this.setState({
+              password: text
+            })
+          }}
+        />
+        <TouchableOpacity
+           style={[styles.button,{marginBottom:20, marginTop:20}]}
+           onPress = {()=>{
+             this.userLogin(this.state.emailId, this.state.password)
+           }}
+           >
+           <Text style={styles.buttonText}>Login</Text>
+         </TouchableOpacity>
 
+         <TouchableOpacity
+           style={styles.button}
+           onPress={()=>this.setState({ isModalVisible:true})}
+           >
+           <Text style={styles.buttonText}>SignUp</Text>
+         </TouchableOpacity>
+      </View>
+    </View>
+    )
+  }
 }
 
-const styles = (dimensions) => StyleSheet.create({
-   backgroundContainer: {
-      paddingTop: (dimensions.height / 2) - ((dimensions.height / 10) / 2),
-      paddingLeft: (dimensions.width / 2) - ((dimensions.width / 3) / 2)
+const styles = StyleSheet.create({
+  container:{
+   flex:1,
+   backgroundColor:'#F8BE85',
+   alignItems: 'center',
+   justifyContent: 'center'
+ },
+ profileContainer:{
+   flex:1,
+   justifyContent:'center',
+   alignItems:'center',
+ },
+ title :{
+   fontSize:65,
+   fontWeight:'300',
+   paddingBottom:30,
+   color : '#ff3d00'
+ },
+ loginBox:{
+   width: 300,
+   height: 40,
+   borderBottomWidth: 1.5,
+   borderColor : '#ff8a65',
+   fontSize: 20,
+   margin:10,
+   paddingLeft:10
+ },
+ KeyboardAvoidingView:{
+   flex:1,
+   justifyContent:'center',
+   alignItems:'center'
+ },
+ modalTitle :{
+   justifyContent:'center',
+   alignSelf:'center',
+   fontSize:30,
+   color:'#ff5722',
+   margin:50
+ },
+ modalContainer:{
+   flex:1,
+   borderRadius:20,
+   justifyContent:'center',
+   alignItems:'center',
+   backgroundColor:"#ffff",
+   marginRight:30,
+   marginLeft : 30,
+   marginTop:80,
+   marginBottom:80,
+ },
+ formTextInput:{
+   width:"75%",
+   height:35,
+   alignSelf:'center',
+   borderColor:'#ffab91',
+   borderRadius:10,
+   borderWidth:1,
+   marginTop:20,
+   padding:10
+ },
+ registerButton:{
+   width:200,
+   height:40,
+   alignItems:'center',
+   justifyContent:'center',
+   borderWidth:1,
+   borderRadius:10,
+   marginTop:30
+ },
+ registerButtonText:{
+   color:'#ff5722',
+   fontSize:15,
+   fontWeight:'bold'
+ },
+ cancelButton:{
+   width:200,
+   height:30,
+   justifyContent:'center',
+   alignItems:'center',
+   marginTop:5,
+ },
+
+ button:{
+   width:300,
+   height:50,
+   justifyContent:'center',
+   alignItems:'center',
+   borderRadius:25,
+   backgroundColor:"#ff9800",
+   shadowColor: "#000",
+   shadowOffset: {
+      width: 0,
+      height: 8,
    },
-   textInputContainer: {
-      paddingTop: 20
-   },
-   textInput: {
-      width: dimensions.width / 3,
-      height: dimensions.height / 15,
-      borderWidth: 4,
-      borderColor: 'black',
-      borderRadius: (dimensions.height / 15) / 2,
-      fontSize: 20,
-      padding: 2,
-   },
-   buttonContainer: {
-      paddingLeft: (dimensions.width / 2) - (100 / 2),
-      paddingTop: 10
-   },
-   button: {
-      width: 100,
-      height: 40,
-      backgroundColor: 'purple',
-      borderRadius: 25,
-      borderWidth: 4,
-      borderColor: 'black',
-      alignItems: 'center',
-      justifyContent: 'center'
-   },
-   modalBackground: {
-      width: dimensions.width / 2,
-      paddingVertical: 20,
-      backgroundColor: 'yellow',
-      borderWidth: 5,
-      borderColor: 'black',
-      borderRadius: 10
-   },
-   modalText: {
-      fontSize: 20,
-      fontWeight: '600'
-   },
-   modalTextInputContainer: {
-      paddingTop: 20,
-      alignItems: 'center'
-   },
-   modalTextInput: {
-      width: dimensions.width / 6,
-      height: 40,
-      borderWidth: 4,
-      borderRadius: 20,
-      fontSize: 20,
-      padding: 4
-   },
-   modalButtonContainer: {
-      paddingTop: 20,
-      alignItems: 'center'
-   }
-});
+   shadowOpacity: 0.30,
+   shadowRadius: 10.32,
+   elevation: 16,
+   padding: 10
+ },
+ buttonText:{
+   color:'#ffff',
+   fontWeight:'200',
+   fontSize:20
+ }
+})
