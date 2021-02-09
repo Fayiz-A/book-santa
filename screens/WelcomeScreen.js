@@ -7,11 +7,13 @@ import {
     KeyboardAvoidingView,
     StyleSheet,
     TouchableOpacity,
+    Alert,
     ScrollView} from 'react-native';
 
 import SantaAnimation from '../components/SantaClause.js';
 import db from '../config';
 import firebase from 'firebase';
+import { AppTabNavigator } from './AppTabNavigator.js';
 
 
 
@@ -63,7 +65,8 @@ export default class WelcomeScreen extends Component{
 userLogin = (emailId, password)=>{
    firebase.auth().signInWithEmailAndPassword(emailId, password)
    .then(()=>{
-     return alert("Successfully Login")
+      // alert('Login Successful');
+      this.props.navigation.navigate('DonateBook')
    })
    .catch((error)=> {
      var errorCode = error.code;
@@ -185,7 +188,7 @@ showModal = ()=>{
 
         </View>
           {
-            this.showModal()
+            // this.showModal()
           }
         <View style={{justifyContent:'center', alignItems:'center'}}>
           {/* <SantaAnimation/> */}
@@ -205,7 +208,7 @@ showModal = ()=>{
           <TextInput
           style={styles.loginBox}
           secureTextEntry = {true}
-          placeholder="enter Password"
+          placeholder="Enter Password"
           onChangeText={(text)=>{
             this.setState({
               password: text
