@@ -4,8 +4,9 @@ import { ListItem, ButtonGroup } from 'react-native-elements'
 import firebase from 'firebase';
 import db from '../config'
 import AppHeader from '../components/AppBar';
+import CustomDrawer from '../components/DrawerNavigator'
 
-export default class BookDonateScreen extends Component {
+export default class DonateBookScreen extends React.Component {
   constructor() {
     super()
     this.state = {
@@ -56,9 +57,10 @@ export default class BookDonateScreen extends Component {
   }
 
   render() {
+    console.log(`Props are ${JSON.stringify(this.props)}`)
     return (
       <View style={{ flex: 1 }}>
-        {/* <AppHeader title="Donate Books" /> */}
+        <AppHeader title="Donate Books" />
         <View style={{ flex: 1 }}>
           {
             this.state.requestedBooksList.length == 0

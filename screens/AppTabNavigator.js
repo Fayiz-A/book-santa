@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
-import DonateBookScreen from './DonateBookScreen';
 import RequestBookScreen from './RequestBookScreen';
+import DonateBookScreen from './DonateBookScreen';
 
 export const AppTabNavigator = createBottomTabNavigator({
    DonateBook: {
