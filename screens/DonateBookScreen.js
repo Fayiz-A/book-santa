@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: "#ff5722",
     borderRadius: 20,
-    shadowColor: "#000",
+    shadowColor: "grey",
     shadowOpacity: 0.5,
     shadowOffset: {
       width: 0,

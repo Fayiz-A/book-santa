@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import RequestBookScreen from './RequestBookScreen';
 import DonateBookScreen from './DonateBookScreen';
 
-export const AppTabNavigator = createBottomTabNavigator({
+export const AppTabNavigator = (props) => createBottomTabNavigator({
    DonateBook: {
       screen: DonateBookScreen,
       navigationOptions: {

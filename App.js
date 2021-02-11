@@ -17,11 +17,11 @@ export default class App extends React.Component {
 
 const SwitchNavigator = createAppContainer(
   createSwitchNavigator({
-    Drawer: { screen: DrawerNavigator  },
     WelcomeScreen: { screen: WelcomeScreen },
+    Drawer: { screen: DrawerNavigator  },
   },
   {
-    initialRouteName: 'Drawer'
+    initialRouteName: 'WelcomeScreen'
   }
   )
 
