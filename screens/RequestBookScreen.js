@@ -15,11 +15,17 @@ export default class RequestBookScreen extends React.Component {
       }
    }
 
+   createUniqueId(){
+      return Math.random().toString(36).substring(7);
+   }
+
    addRequest = async (bookName, reason) => {
       if(bookName.trim().length != 0 && reason.trim().length != 0) {
          await db.collection('bookRequests').add({
             bookName: bookName,
-            reason: reason
+            reason: reason,
+            user_id: firebase.auth().currentUser.email,
+            requestID: this.createUniqueId()
          });
    
          this.setState({

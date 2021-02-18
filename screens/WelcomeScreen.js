@@ -21,8 +21,8 @@ export default class WelcomeScreen extends Component{
   constructor(){
     super();
     this.state={
-      emailId:'',
-      password:'',
+      emailId:'abc@gmail.com',
+      password:'testing',
       firstName:'',
       lastName:'',
       address:'',

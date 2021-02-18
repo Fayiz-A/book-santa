@@ -44,15 +44,25 @@ getRecieverDetails(){
 
 updateBookStatus=()=>{
   db.collection('allDonations').add({
-    book_name           : this.state.bookName,
-    request_id          : this.state.requestId,
-    requested_by        : this.state.recieverName,
-    donor_id            : this.state.userId,
-    request_status      :  "Donor Interested"
+    bookName           : this.state.bookName,
+    requestID          : this.state.requestId,
+    requestedBy        : this.state.recieverName,
+    donorID           : this.state.userId,
+    requestStatus     :  "Donor Interested"
   })
 }
 
+addNotification = () => {
+   let message = 'Donor Interested';
 
+   db.collection('notifications').add({
+      donorID: this.state.userId,
+      bookName: this.state.bookName,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      notificationStatus: 'unread',
+      message: message
+   })
+}
 
 componentDidMount(){
   this.getRecieverDetails()
@@ -100,12 +110,13 @@ componentDidMount(){
         </View>
         <View style={styles.buttonContainer}>
           {
-            this.state.recieverId !== this.state.userId
+            this.state.recieverId == this.state.userId
             ?(
               <TouchableOpacity
                   style={styles.button}
                   onPress={()=>{
                     this.updateBookStatus()
+                    this.addNotification();
                     this.props.navigation.navigate('MyDonations')
                   }}>
                 <Text>I want to Donate</Text>

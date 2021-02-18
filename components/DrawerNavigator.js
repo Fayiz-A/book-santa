@@ -10,6 +10,7 @@ import SettingsScreen from '../screens/SettingsScreen';
 import {AppStackNavigator} from '../components/AppStackNavigator';
 import RecieverDetailsScreen from '../screens/ReceiverDetailsScreen';
 import MyDonationsScreen from '../screens/MyDonationScreen';
+import NotificationsScreen from '../screens/NotificationsScreen';
 
 export const DrawerNavigator = createDrawerNavigator(
    {
@@ -21,6 +22,9 @@ export const DrawerNavigator = createDrawerNavigator(
       },
       MyDonations: {
          screen: (props) => <MyDonationsScreen />
+      },
+      Notifications: {
+         screen: (props) => <NotificationsScreen />
       }
    },
    {
