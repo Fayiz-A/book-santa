@@ -48,9 +48,12 @@ export default class DonateBookScreen extends React.Component {
 
         </ListItem.Content>
         <ListItem.ButtonGroup 
-            buttonStyle={styles.button}
             textStyle={{ color: '#000' }} 
             buttons={['View']} 
+            onPress={(index) => {
+                this.props.navigation.navigate('ReceiverDetails', {'details': item});
+                console.log(`The button's index is: ${item.bookName}`)
+            }}
         />
       </ListItem>
     )

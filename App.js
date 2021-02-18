@@ -10,7 +10,7 @@ import { DrawerNavigator } from './components/DrawerNavigator';
 export default class App extends React.Component {
   render() {
     return <SafeAreaProvider>
-      <SwitchNavigator />
+      <SwitchNavigator /> 
     </SafeAreaProvider>
   }
 }
@@ -19,6 +19,7 @@ const SwitchNavigator = createAppContainer(
   createSwitchNavigator({
     WelcomeScreen: { screen: WelcomeScreen },
     Drawer: { screen: DrawerNavigator  },
+    BottomTab: { screen: AppTabNavigator }
   },
   {
     initialRouteName: 'WelcomeScreen'

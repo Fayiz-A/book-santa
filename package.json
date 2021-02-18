@@ -10,6 +10,7 @@
   "dependencies": {
     "@react-navigation/drawer": "^5.12.3",
     "@react-navigation/native": "^5.9.2",
+    "@react-navigation/stack": "^5.14.2",
     "expo": "^38.0.0",
     "expo-status-bar": "^1.0.0",
     "firebase": "7.9.0",
@@ -20,12 +21,13 @@
     "react-native-elements": "^3.1.0",
     "react-native-gesture-handler": "~1.6.0",
     "react-native-reanimated": "~1.9.0",
+    "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
     "react-native-web": "~0.11.7",
     "react-navigation": "^4.4.3",
     "react-navigation-drawer": "^2.4.11",
-    "react-navigation-tabs": "^2.10.1",
-    "react-native-safe-area-context": "~3.0.7"
+    "react-navigation-stack": "^2.10.2",
+    "react-navigation-tabs": "^2.10.1"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"

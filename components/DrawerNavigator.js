@@ -7,15 +7,21 @@ import CustomDrawer from './Drawer';
 import WelcomeScreen from '../screens/WelcomeScreen';
 import DonateBookScreen from '../screens/DonateBookScreen';
 import SettingsScreen from '../screens/SettingsScreen';
+import {AppStackNavigator} from '../components/AppStackNavigator';
+import RecieverDetailsScreen from '../screens/ReceiverDetailsScreen';
+import MyDonationsScreen from '../screens/MyDonationScreen';
 
 export const DrawerNavigator = createDrawerNavigator(
    {
+      Home: { 
+         screen: AppStackNavigator,
+      },
       Settings: {
          screen: (props) => <SettingsScreen/>
       },
-      Home: { 
-         screen: (props) => <DonateBookScreen/>,
-      },
+      MyDonations: {
+         screen: (props) => <MyDonationsScreen />
+      }
    },
    {
       contentComponent: CustomDrawer
