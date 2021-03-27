@@ -63,7 +63,7 @@ export default class DonateBookScreen extends React.Component {
     console.log(`Props are ${JSON.stringify(this.props)}`)
     return (
       <View style={{ flex: 1 }}>
-        <AppHeader title="Donate Books" />
+        <AppHeader title="Donate Books" notificationIconVisible={true}/>
         <View style={{ flex: 1 }}>
           {
             this.state.requestedBooksList.length == 0

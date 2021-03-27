@@ -64,7 +64,7 @@ export default class MyDonationScreen extends Component {
    render(){
      return(
        <View style={{flex:1}}>
-         <AppHeader navigation={this.props.navigation} title="My Donations"/>
+         <AppHeader navigation={this.props.navigation} title="My Donations" notificationIconVisible={true}/>
          <View style={{flex:1}}>
            {
              this.state.allDonations.length === 0

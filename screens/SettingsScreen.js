@@ -65,7 +65,7 @@ export default class SettingsScreen extends React.Component {
    render() {
       return (
          <View>
-            <AppHeader title='Settings' />
+            <AppHeader title='Settings' notificationIconVisible={true}/>
             <View>
                <TextInput
                   style={styles.formTextInput}

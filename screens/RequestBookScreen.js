@@ -42,7 +42,7 @@ export default class RequestBookScreen extends React.Component {
    render() {
       return (
          <View>
-            <AppHeader title='Request Book'/>
+            <AppHeader title='Request Book' notificationIconVisible={true}/>
             <KeyboardAvoidingView>
                <View>
                   <View style={styles.bookNameTextInputContainer}>
